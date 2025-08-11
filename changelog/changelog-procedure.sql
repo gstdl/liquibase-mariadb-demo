@@ -20,13 +20,13 @@ CREATE PROCEDURE GET_DIRECTOR_MOVIES (IN director_id_param INT)
 BEGIN
 SELECT
     m.id,
-    m.name,
-    m.year,
-    m.rank
+    m.movie_name,
+    m.movie_year,
+    m.movie_rank
 FROM movies AS m
 INNER JOIN movies_directors AS md ON m.id = md.movie_id
 WHERE md.director_id = director_id_param
-ORDER BY m.year DESC, m.rank DESC;
+ORDER BY m.movie_year DESC, m.movie_rank DESC;
 END;
 --rollback DROP PROCEDURE IF EXISTS GetDirectorMovies;
 
@@ -35,13 +35,13 @@ CREATE PROCEDURE SEARCH_MOVIES_BY_GENRE (IN genre_param VARCHAR(100))
 BEGIN
 SELECT
     m.id,
-    m.name,
-    m.year,
-    m.rank
+    m.movie_name,
+    m.movie_year,
+    m.movie_rank
 FROM movies AS m
 INNER JOIN movies_genres AS mg ON m.id = mg.movie_id
 WHERE mg.genre = genre_param
-ORDER BY m.rank DESC, m.year DESC;
+ORDER BY m.movie_rank DESC, m.movie_year DESC;
 END;
 --rollback DROP PROCEDURE IF EXISTS SearchMoviesByGenre;
 
@@ -50,13 +50,13 @@ CREATE PROCEDURE GET_ACTOR_FILMOGRAPHY (IN actor_id_param INT)
 BEGIN
 SELECT
     m.id,
-    m.name,
-    m.year,
-    m.rank,
+    m.movie_name,
+    m.movie_year,
+    m.movie_rank,
     r.role
 FROM movies AS m
 INNER JOIN roles AS r ON m.id = r.movie_id
 WHERE r.actor_id = actor_id_param
-ORDER BY m.year DESC, m.rank DESC;
+ORDER BY m.movie_year DESC, m.movie_rank DESC;
 END;
 --rollback DROP PROCEDURE IF EXISTS GetActorFilmography;
