@@ -4,17 +4,21 @@
 CREATE VIEW v_movie_details AS
 SELECT
     m.id,
-    m.name,
-    m.year,
-    m.rank,
-    GROUP_CONCAT(DISTINCT mg.genre ORDER BY mg.genre SEPARATOR ', ') AS genres,
-    COUNT(DISTINCT r.actor_id) AS actor_count,
+    m.movie_name,
+    m.movie_year,
+    m.movie_rank,
+    GROUP_CONCAT(
+        DISTINCT mg.genre
+        ORDER BY mg.genre
+        SEPARATOR ', '
+    )                              AS genres,
+    COUNT(DISTINCT r.actor_id)     AS actor_count,
     COUNT(DISTINCT md.director_id) AS director_count
 FROM movies AS m
 LEFT JOIN movies_genres AS mg ON m.id = mg.movie_id
 LEFT JOIN roles AS r ON m.id = r.movie_id
 LEFT JOIN movies_directors AS md ON m.id = md.movie_id
-GROUP BY m.id, m.name, m.year, m.rank;
+GROUP BY m.id, m.movie_name, m.movie_year, m.movie_rank;
 --rollback DROP VIEW v_movie_details;
 
 --changeset imdb:202-create-director-stats-view
@@ -28,7 +32,7 @@ SELECT
         ORDER BY dg.genre
         SEPARATOR ', '
     )                                      AS preferred_genres,
-    AVG(m.`rank`)                          AS avg_movie_rank
+    AVG(m.movie_rank)                      AS avg_movie_rank
 FROM directors AS d
 LEFT JOIN movies_directors AS md ON d.id = md.director_id
 LEFT JOIN directors_genres AS dg ON d.id = dg.director_id
@@ -44,7 +48,7 @@ SELECT
     CONCAT(a.first_name, ' ', a.last_name) AS full_name,
     COUNT(DISTINCT r.movie_id)             AS movie_count,
     COUNT(DISTINCT r.role)                 AS unique_roles_count,
-    AVG(m.`rank`)                          AS avg_movie_rank
+    AVG(m.movie_rank)                      AS avg_movie_rank
 FROM actors AS a
 LEFT JOIN roles AS r ON a.id = r.actor_id
 LEFT JOIN movies AS m ON r.movie_id = m.id
@@ -56,13 +60,13 @@ CREATE VIEW v_genre_stats AS
 SELECT
     mg.genre,
     COUNT(DISTINCT mg.movie_id) AS movie_count,
-    AVG(m.`rank`)               AS avg_movie_rank,
-    MAX(m.`rank`)               AS best_movie_rank,
-    MIN(m.`year`)               AS earliest_year,
-    MAX(m.`year`)               AS latest_year
+    AVG(m.movie_rank)           AS avg_movie_rank,
+    MAX(m.movie_rank)           AS best_movie_rank,
+    MIN(m.movie_year)           AS earliest_year,
+    MAX(m.movie_year)           AS latest_year
 FROM movies_genres AS mg
 INNER JOIN movies AS m ON mg.movie_id = m.id
-WHERE m.rank IS NOT NULL
+WHERE m.movie_rank IS NOT NULL
 GROUP BY mg.genre
 ORDER BY avg_movie_rank DESC;
 --rollback DROP VIEW v_genre_stats;

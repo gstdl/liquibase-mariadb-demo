@@ -17,7 +17,7 @@ CREATE INDEX idx_movies_year ON movies (year);
 --rollback DROP INDEX idx_movies_year ON movies;
 
 --changeset imdb:105-create-movies-rank-index
-CREATE INDEX idx_movies_rank ON movies (rank);
+CREATE INDEX idx_movies_rank ON movies (movie_rank);
 --rollback DROP INDEX idx_movies_rank ON movies;
 
 --changeset imdb:106-create-directors-genres-genre-index
