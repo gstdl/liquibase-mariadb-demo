@@ -1,0 +1,17 @@
+services:
+  mariadb:
+    image: mariadb:11.2
+    container_name: mariadb_db
+    environment:
+      MARIADB_DATABASE: demo_db
+      MARIADB_USER: demo_user
+      MARIADB_PASSWORD: demo_password
+      MARIADB_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
