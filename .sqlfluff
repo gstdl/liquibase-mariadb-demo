@@ -3,6 +3,7 @@
 # Supported dialects https://docs.sqlfluff.com/en/stable/dialects.html
 # Or run 'sqlfluff dialects'
 dialect = mysql
+exclude_rules = L034,L037
 
 [sqlfluff:layout:type:alias_expression]
 spacing_before = align
@@ -11,8 +12,6 @@ align_scope = bracketed
 
 [sqlfluff:rules:capitalisation.keywords]
 capitalisation_policy = upper
-[sqlfluff:rules:capitalisation.identifiers]
-extended_capitalisation_policy = upper
 [sqlfluff:rules:capitalisation.functions]
 extended_capitalisation_policy = upper
 [sqlfluff:rules:capitalisation.literals]
