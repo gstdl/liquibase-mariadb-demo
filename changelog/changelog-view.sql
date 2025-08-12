@@ -47,7 +47,7 @@ SELECT
     a.gender,
     CONCAT(a.first_name, ' ', a.last_name) AS full_name,
     COUNT(DISTINCT r.movie_id)             AS movie_count,
-    COUNT(DISTINCT r.role)                 AS unique_roles_count,
+    COUNT(DISTINCT r.actor_role)           AS unique_roles_count,
     AVG(m.movie_rank)                      AS avg_movie_rank
 FROM actors AS a
 LEFT JOIN roles AS r ON a.id = r.actor_id

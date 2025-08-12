@@ -9,11 +9,11 @@ CREATE INDEX idx_actors_name ON actors (first_name, last_name);
 --rollback DROP INDEX idx_actors_name ON actors;
 
 --changeset imdb:103-create-movies-name-index
-CREATE INDEX idx_movies_name ON movies (name);
+CREATE INDEX idx_movies_name ON movies (movie_name);
 --rollback DROP INDEX idx_movies_name ON movies;
 
 --changeset imdb:104-create-movies-year-index
-CREATE INDEX idx_movies_year ON movies (year);
+CREATE INDEX idx_movies_year ON movies (movie_year);
 --rollback DROP INDEX idx_movies_year ON movies;
 
 --changeset imdb:105-create-movies-rank-index
@@ -29,5 +29,5 @@ CREATE INDEX idx_movies_genres_genre ON movies_genres (genre);
 --rollback DROP INDEX idx_movies_genres_genre ON movies_genres;
 
 --changeset imdb:108-create-roles-role-index
-CREATE INDEX idx_roles_role ON roles (role);
+CREATE INDEX idx_roles_role ON roles (actor_role);
 --rollback DROP INDEX idx_roles_role ON roles;

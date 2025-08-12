@@ -60,7 +60,7 @@ CREATE TABLE roles (
     actor_id INT NOT NULL,
     movie_id INT NOT NULL,
     actor_role VARCHAR(500),
-    PRIMARY KEY (actor_id, movie_id, role),
+    PRIMARY KEY (actor_id, movie_id, actor_role),
     FOREIGN KEY (actor_id) REFERENCES actors (id) ON DELETE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );
