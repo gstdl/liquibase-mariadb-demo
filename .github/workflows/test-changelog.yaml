@@ -33,10 +33,14 @@ jobs:
           sleep 5
         done
 
+    - name: Update Liquibase properties URL
+      run: |
+        sed -i 's|url=.*|url=jdbc:mariadb://mariadb:3306/demo_db|g' liquibase-example.properties
+
     - name: Run Liquibase tests
       run: |
         docker run \
-          --network host \
+          --network ${{ job.services.mariadb.network }} \
           -v ${{ github.workspace }}/changelog:/liquibase/changelog \
           -v ${{ github.workspace }}/liquibase-example.properties:/liquibase/liquibase.properties \
           -v ${{ github.workspace }}/scripts:/liquibase/scripts \
