@@ -19,6 +19,8 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=30s --health-timeout=10s --health-retries=3
+      liquibase:
+        image: liquibase/liquibase:4.33-alpine
 
     steps:
     - name: Checkout code
@@ -34,6 +36,7 @@ jobs:
     - name: Run Liquibase tests
       run: |
         docker run \
+          --network host \
           -v ${{ github.workspace }}/changelog:/liquibase/changelog \
           -v ${{ github.workspace }}/liquibase-example.properties:/liquibase/liquibase.properties \
           -v ${{ github.workspace }}/scripts:/liquibase/scripts \
