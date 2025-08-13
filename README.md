@@ -39,3 +39,9 @@ docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties
 ```sh
 ►docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties:/liquibase/liquibase.properties liquibase/liquibase:4.33-alpine --defaults-file=liquibase.properties history
 ```
+
+### Validate changes using test script
+
+```sh
+docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties:/liquibase/liquibase.properties -v ./scripts/test-update-rollback.sh:/test.sh liquibase/liquibase:4.33-alpine /test.sh
+```

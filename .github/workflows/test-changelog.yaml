@@ -5,6 +5,7 @@ on:
 
 jobs:
   test:
+    name: Test Changelog
     runs-on: ubuntu-latest
     
     services:
