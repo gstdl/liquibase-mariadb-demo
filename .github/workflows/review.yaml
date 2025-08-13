@@ -105,17 +105,10 @@ jobs:
             -X POST \
             -d '{"commit_id": "${{ github.event.pull_request.head.sha }}", "body": "SQL PARSING ERROR DETECTED! Please fix them.", "event":"REQUEST_CHANGES", "comments": ${{ steps.pre_review.outputs.comment }}' \
             https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews
-      
-      - name: PR review approve
-        if: steps.pre_review.outputs.comment == '[]'
-        run: |
-          curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -X POST \
-            -d '{"commit_id": "${{ github.event.pull_request.head.sha }}", "body": "# SQLFluff\n\nLGTM! :+1:", "event":"APPROVE", "comments": ${{ steps.pre_review.outputs.comment }}' \
-            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews
+        
+      - name: Mark job as failed
+        if: steps.pre_review.outputs.comment != '[]'
+        run: exit 1
         
       - name: Cleanup files
         if: steps.pre_review.outcome == 'success'
