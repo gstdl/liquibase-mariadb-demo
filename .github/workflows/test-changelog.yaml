@@ -41,4 +41,4 @@ jobs:
 
     - name: Run Liquibase tests
       run: |
-        docker exec ${{ job.services.liquibase.id }} /liquibase/scripts/test-update-rollback.sh
+        docker run ${{ job.services.liquibase.id }} /liquibase/scripts/test-update-rollback.sh
