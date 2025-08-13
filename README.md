@@ -31,13 +31,13 @@ docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties
 ### Check for unimplemented changes
 
 ```sh
-►docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties:/liquibase/liquibase.properties liquibase/liquibase:4.33-alpine --defaults-file=liquibase.properties status
+docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties:/liquibase/liquibase.properties liquibase/liquibase:4.33-alpine --defaults-file=liquibase.properties status
 ```
 
 ### Check changes history
 
 ```sh
-►docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties:/liquibase/liquibase.properties liquibase/liquibase:4.33-alpine --defaults-file=liquibase.properties history
+docker run -v ./changelog:/liquibase/changelog -v ./liquibase-example.properties:/liquibase/liquibase.properties liquibase/liquibase:4.33-alpine --defaults-file=liquibase.properties history
 ```
 
 ### Validate changes using test script
