@@ -38,7 +38,7 @@ jobs:
       - name: Get changed .sql files to lint
         id: get_files_to_lint
         shell: bash -l {0}
-        run: echo "lintees=$(cat $HOME/files.txt | tr -s ' ' '\n' | grep '^changelog' | grep '\.sql$' | tr -s '\n' ' ')" >> $GITHUB_OUTPUT
+        run: echo "lintees=$(cat $HOME/files.txt | tr -s ' ' '\n' | grep '^changelog' | grep '.sql' | tr -s '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Lint sql files
         id: linting
