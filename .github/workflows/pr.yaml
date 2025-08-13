@@ -1,0 +1,17 @@
+name: Pull Request Pipeline
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  review:
+    name: Code Review
+    uses: ./.github/workflows/review.yaml
+    secrets: inherit
+
+  test:
+    name: Test Changelog
+    needs: review
+    uses: ./.github/workflows/test-changelog.yaml
+    secrets: inherit

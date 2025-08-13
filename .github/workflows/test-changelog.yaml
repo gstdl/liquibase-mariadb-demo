@@ -1,0 +1,43 @@
+name: Test Changelog
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mariadb:
+        image: mariadb:11.2
+        env:
+          MARIADB_DATABASE: demo_db
+          MARIADB_USER: demo_user
+          MARIADB_PASSWORD: demo_password
+          MARIADB_ROOT_PASSWORD: root_password
+        ports:
+          - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=30s --health-timeout=10s --health-retries=3
+
+      liquibase:
+        image: liquibase/liquibase:4.33-alpine
+        volumes:
+          - ${{ github.workspace }}/changelog:/liquibase/changelog
+          - ${{ github.workspace }}/liquibase-example.properties:/liquibase/liquibase.properties
+          - ${{ github.workspace }}/scripts:/liquibase/scripts
+        options: --workdir /liquibase
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Wait for MariaDB
+      run: |
+        until mysqladmin ping -h 127.0.0.1 -P 3306 -u demo_user -pdemo_password --silent; do
+          echo 'Waiting for MariaDB...'
+          sleep 5
+        done
+
+    - name: Run Liquibase tests
+      run: |
+        docker exec ${{ job.services.liquibase.id }} /liquibase/scripts/test-update-rollback.sh"
