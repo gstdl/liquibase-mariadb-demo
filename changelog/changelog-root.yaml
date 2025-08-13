@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: changelog-table.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changelog-index.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changelog-view.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changelog-procedure.sql
+      relativeToChangelogFile: true

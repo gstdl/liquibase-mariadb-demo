@@ -1,0 +1,43 @@
+name: Pull Request Pipeline
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  review:
+    name: Code Review
+    uses: ./.github/workflows/review.yaml
+    secrets: inherit
+    permissions:
+      contents: write
+      packages: read
+      statuses: write
+      checks: write
+
+  test:
+    name: Test Changelog
+    needs: review
+    uses: ./.github/workflows/test-changelog.yaml
+    secrets: inherit
+
+  approve:
+    name: Approve PR
+    needs: [review, test]
+    runs-on: ubuntu-latest
+    if: success()
+    
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: PR review approve
+        run: |
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -X POST \
+            -d '{"commit_id": "${{ github.event.pull_request.head.sha }}", "body": "# All Checks Passed\n\nLGTM! :+1:\n\n- ✅ Code review completed\n- ✅ Changelog tests passed", "event":"APPROVE"}' \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews

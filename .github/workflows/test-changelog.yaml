@@ -1,0 +1,52 @@
+name: Test Changelog
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Test Changelog
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        mariadb-version: ['11.4.8', '11.8.3', '12.0.2', '12.1.1-rc']
+        liquibase-version: ['4.31-alpine', '4.32-alpine', '4.33-alpine']
+    
+    services:
+      mariadb:
+        image: mariadb:${{ matrix.mariadb-version }}
+        env:
+          MARIADB_DATABASE: demo_db
+          MARIADB_USER: demo_user
+          MARIADB_PASSWORD: demo_password
+          MARIADB_ROOT_PASSWORD: root_password
+        ports:
+          - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=30s --health-timeout=10s --health-retries=3
+      liquibase:
+        image: liquibase/liquibase:${{ matrix.liquibase-version }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Wait for MariaDB
+      run: |
+        until mysqladmin ping -h 127.0.0.1 -P 3306 -u demo_user -pdemo_password --silent; do
+          echo 'Waiting for MariaDB...'
+          sleep 5
+        done
+
+    - name: Update Liquibase properties URL
+      run: |
+        sed -i 's|url=.*|url=jdbc:mariadb://mariadb:3306/demo_db|g' liquibase-example.properties
+
+    - name: Run Liquibase tests
+      run: |
+        docker run \
+          --network ${{ job.services.mariadb.network }} \
+          -v ${{ github.workspace }}/changelog:/liquibase/changelog \
+          -v ${{ github.workspace }}/liquibase-example.properties:/liquibase/liquibase.properties \
+          -v ${{ github.workspace }}/scripts:/liquibase/scripts \
+          liquibase/liquibase:${{ matrix.liquibase-version }} /liquibase/scripts/test-update-rollback.sh
