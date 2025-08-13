@@ -8,9 +8,14 @@ jobs:
     name: Test Changelog
     runs-on: ubuntu-latest
     
+    strategy:
+      matrix:
+        mariadb-version: ['11.4.8', '11.8.3', '12.0.2', '12.1.1-rc']
+        liquibase-version: ['4.31-alpine', '4.32-alpine', '4.33-alpine']
+    
     services:
       mariadb:
-        image: mariadb:11.2
+        image: mariadb:${{ matrix.mariadb-version }}
         env:
           MARIADB_DATABASE: demo_db
           MARIADB_USER: demo_user
@@ -20,7 +25,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=30s --health-timeout=10s --health-retries=3
       liquibase:
-        image: liquibase/liquibase:4.33-alpine
+        image: liquibase/liquibase:${{ matrix.liquibase-version }}
 
     steps:
     - name: Checkout code
@@ -44,4 +49,4 @@ jobs:
           -v ${{ github.workspace }}/changelog:/liquibase/changelog \
           -v ${{ github.workspace }}/liquibase-example.properties:/liquibase/liquibase.properties \
           -v ${{ github.workspace }}/scripts:/liquibase/scripts \
-          liquibase/liquibase:4.33-alpine /liquibase/scripts/test-update-rollback.sh
+          liquibase/liquibase:${{ matrix.liquibase-version }} /liquibase/scripts/test-update-rollback.sh
