@@ -9,6 +9,11 @@ jobs:
     name: Code Review
     uses: ./.github/workflows/review.yaml
     secrets: inherit
+    permissions:
+      contents: write
+      packages: read
+      statuses: write
+      checks: write
 
   test:
     name: Test Changelog
